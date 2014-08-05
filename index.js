@@ -168,6 +168,7 @@ Dialog.prototype.effect = function(type){
 
 Dialog.prototype.modal = function(){
   this._overlay = overlay();
+  this._classes.add('modal');
   return this;
 };
 
@@ -178,15 +179,11 @@ Dialog.prototype.modal = function(){
  * @api public
  */
 
-Dialog.prototype.overlay = function(opts){
+Dialog.prototype.overlay = function(){
   var self = this;
-  opts = opts || { closable: true };
-  var o = overlay(opts);
-  o.on('hide', function(){
-    self._overlay = null;
-    self.hide();
-  });
+  var o = overlay();
   this._overlay = o;
+  this._classes.add('modal');
   return this;
 };
 
@@ -236,11 +233,10 @@ Dialog.prototype.show = function(){
   // overlay
   if (overlay) {
     overlay.show();
-    this._classes.add('modal');
   }
 
   // escape
-  if (!overlay || overlay.closable) this.escapable();
+  this.escapable();
 
   // position
   document.body.appendChild(this.el);
@@ -262,8 +258,7 @@ Dialog.prototype.show = function(){
 
 Dialog.prototype.hideOverlay = function(){
   if (!this._overlay) return;
-  this._overlay.remove();
-  this._overlay = null;
+  this._overlay.hide();
 };
 
 /**
